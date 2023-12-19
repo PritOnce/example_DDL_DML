@@ -1,0 +1,9 @@
+[
+  {
+    "id": 3,
+    "dni": "456789123C",
+    "fecha_nacimiento": "nov 10, 2001",
+    "estado": true,
+    "fecha_matriculacion": "sept 8, 2024"
+  }
+]
