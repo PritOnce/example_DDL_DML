@@ -9,16 +9,20 @@ public class Estudiante {
     private Date fecha_nacimiento;
     private boolean estado;
     private Date fecha_matriculacion;
+    private Date ultima_actualizacion;
+    private String enviado;
 
     public Estudiante() {
     }
 
-    public Estudiante(int id, String dni, Date fecha_nacimiento, boolean estado, Date fecha_matriculacion) {
+    public Estudiante(int id, String dni, Date fecha_nacimiento, boolean estado, Date fecha_matriculacion, Date ultima_actualizacion, String enviado) {
         this.id = id;
         this.dni = dni;
         this.fecha_nacimiento = fecha_nacimiento;
         this.estado = estado;
         this.fecha_matriculacion = fecha_matriculacion;
+        this.ultima_actualizacion = ultima_actualizacion;
+        this.enviado = enviado;
     }
 
     public int getId() {
@@ -59,5 +63,21 @@ public class Estudiante {
 
     public void setFecha_matriculacion(Date fecha_matriculacion) {
         this.fecha_matriculacion = fecha_matriculacion;
+    }
+
+    public Date getUltima_actualizacion() {
+        return ultima_actualizacion;
+    }
+
+    public void setUltima_actualizacion(Date ultima_actualizacion) {
+        this.ultima_actualizacion = ultima_actualizacion;
+    }
+
+    public String getEnviado() {
+        return enviado;
+    }
+
+    public void setEnviado(String enviado) {
+        this.enviado = enviado;
     }
 }

@@ -5,5 +5,12 @@
     "fecha_nacimiento": "nov 10, 2001",
     "estado": true,
     "fecha_matriculacion": "sept 8, 2024"
+  },
+  {
+    "id": 4,
+    "dni": "561203484A",
+    "fecha_nacimiento": "mar 17, 2002",
+    "estado": true,
+    "fecha_matriculacion": "sept 16, 2024"
   }
 ]

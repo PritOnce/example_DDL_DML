@@ -40,7 +40,7 @@ public class DdmUniversidad implements DbQueryUniversidad{
             }else if(args.length == 2){
                 getAgeByNif(cbs, rs, args[0], connObj);
             } else if (args.length == 3) {
-                updateTimeSent(stmtObj, gson, pst, rs, connObj, args[3]);
+                updateTimeSent(stmtObj, gson, pst, rs, connObj, args[2]);
             }
 
         } catch(Exception sqlException){
@@ -103,26 +103,29 @@ public class DdmUniversidad implements DbQueryUniversidad{
         while(rs.next()){
             Estudiante estudiante = new Estudiante(rs.getInt("id") ,rs.getString("nif"),
                     rs.getDate("fecha_nacimiento"), rs.getBoolean("estado"),
-                    rs.getDate("fecha_matriculacion"));
-
+                    rs.getDate("fecha_matriculacion"), rs.getDate("ultima_actualizacion"), rs.getString("enviado"));
             comprobanteFecha = comprobarFecha(rs.getDate("fecha_matriculacion"));
-            if(comprobanteFecha == 1){
+            if(comprobanteFecha == 0){
+                System.out.println("USUARIO NO ACTIVO: " + rs.getString("nif"));
+            }else if(comprobanteFecha == 1){
                 estudiantesJunioList.add(estudiante);
             } else if (comprobanteFecha == 2) {
                 estudiantesSeptiembreList.add(estudiante);
             }
         }
 
-        saveInf(PATH_MATRICULA_JUNIO, gson.toJson(estudiantesJunioList));
-        saveInf(PATH_MATRICULA_SEPTIEMBRE, gson.toJson(estudiantesSeptiembreList));
+        saveInf(PATH_MATRICULA_JUNIO_LOCAL, gson.toJson(estudiantesJunioList));
+        saveInf(PATH_MATRICULA_SEPTIEMBRE_LOCAL, gson.toJson(estudiantesSeptiembreList));
 
         for(Estudiante estudiante : estudiantesJunioList){
             String nif = estudiante.getDni();
+//            System.out.println("JUNIO: \n" + nif);
             executeSentence(pst, rs, connObj, nif, arg);
         }
 
         for(Estudiante estudiante : estudiantesSeptiembreList){
             String nif = estudiante.getDni();
+//            System.out.println("SEPTIEMBRE: \n" + nif);
             executeSentence(pst, rs, connObj, nif, arg);
         }
     }
@@ -134,7 +137,7 @@ public class DdmUniversidad implements DbQueryUniversidad{
         Date fechaInicioSeptiembre = Date.valueOf("2024-09-01");
         Date fechaFinSeptiembre = Date.valueOf("2024-09-30");
 
-        if( (fecha_matricula.before(fechaInicioJunio) && fecha_matricula.after(fechaFinJunio))  ||
+        if( (fecha_matricula.before(fechaInicioJunio) && fecha_matricula.after(fechaFinJunio))  &&
                 (fecha_matricula.before(fechaInicioSeptiembre) && fecha_matricula.after(fechaFinSeptiembre)) ){
             return 0;
         }
@@ -154,7 +157,7 @@ public class DdmUniversidad implements DbQueryUniversidad{
             fw.close();
             System.out.println("Fichero escrito");
         }catch (Exception e){
-            System.out.println("ERROR GENERAL saveInf");
+            System.out.println("ERROR GENERAL saveInf. " +e.getMessage());
         }
     }
 
@@ -162,10 +165,13 @@ public class DdmUniversidad implements DbQueryUniversidad{
         pst = connObj.prepareStatement(UPDATE_COLUMN);
 
         pst.setString(1, arg);
+        pst.setString(2, nif);
         int elementosActualizados = pst.executeUpdate();
 
         if(elementosActualizados == 0){
             System.out.println("NO SE HA ACTUALIZADO EL NIF: " + nif);
+        }else{
+            System.out.println("ACTUALIZACION EN EL NIF " + nif + " EXITOSA");
         }
     }
 }
