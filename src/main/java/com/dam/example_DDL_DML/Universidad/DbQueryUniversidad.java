@@ -14,11 +14,11 @@ public interface DbQueryUniversidad {
 
 
     //DML
-    public static final String SELECT_USER_NO_PARAMS = "SELECT * FROM ESTUDIANTES WHERE ESTADO = 1";
+    public static final String SELECT_USER_ACTIVE = "SELECT * FROM ESTUDIANTES WHERE ESTADO = 1";
 
     public static final String SELECT_STUDENT_BY_NIF = "SELECT * FROM ESTUDIANTES WHERE NIF = ?";
 
-    public static final String SELECT_AGE_BY_BIRTH = "SELECT CALCULAR_EDAD(?) AS EDAD_RESULT";
+    public static final String SELECT_AGE_BY_NIF = "SELECT CALCULAR_EDAD(?) AS EDAD_RESULT";
 
     public static final String UPDATE_COLUMN = "UPDATE ESTUDIANTES " +
             "SET ULTIMA_ACTUALIZACION = CURRENT_TIMESTAMP(), ENVIADO = ? " +

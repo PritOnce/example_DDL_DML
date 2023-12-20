@@ -23,7 +23,6 @@ public class DdmUniversidad implements DbQueryUniversidad{
         CallableStatement cbs = null;
 
         GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-
         Gson gson = gsonBuilder.create();
 
 
@@ -32,6 +31,11 @@ public class DdmUniversidad implements DbQueryUniversidad{
                     JDBC_USER_UNIVERSIDAD,
                     JDBC_PASS_UNIVERSIDAD);
             stmtObj = connObj.createStatement();
+
+            if(connObj == null){
+                System.out.println("ERROR EN LA CONEXION");
+                System.exit(0);
+            }
 
             if(args.length == 0){
                 getUserActive(stmtObj, rs, gson);
@@ -53,14 +57,23 @@ public class DdmUniversidad implements DbQueryUniversidad{
                 if(connObj != null){
                     connObj.close();
                 }
+                if(rs != null){
+                    rs.close();
+                }
+                if(pst != null){
+                    pst.close();
+                }
+                if(cbs != null){
+                    cbs.close();
+                }
             } catch(Exception e){
-
+                System.out.println("ERROR GENERAL");
             }
         }
     }
 
     public static void getUserActive(Statement st, ResultSet rs, Gson gson) throws SQLException {
-        rs = st.executeQuery(SELECT_USER_NO_PARAMS);
+        rs = st.executeQuery(SELECT_USER_ACTIVE);
 
         while(rs.next()){
             System.out.println(rs.getInt("id") + rs.getString("nif") +
@@ -82,7 +95,7 @@ public class DdmUniversidad implements DbQueryUniversidad{
     }
 
     public static void getAgeByNif(CallableStatement cbs, ResultSet rs, String arg, Connection connObj) throws SQLException {
-        cbs = connObj.prepareCall(SELECT_AGE_BY_BIRTH);
+        cbs = connObj.prepareCall(SELECT_AGE_BY_NIF);
 
         cbs.setString(1, arg);
         rs = cbs.executeQuery();
@@ -93,7 +106,7 @@ public class DdmUniversidad implements DbQueryUniversidad{
     }
 
     public static void updateTimeSent(Statement st, Gson gson, PreparedStatement pst, ResultSet rs, Connection connObj,  String arg) throws SQLException {
-        rs = st.executeQuery(SELECT_USER_NO_PARAMS);
+        rs = st.executeQuery(SELECT_USER_ACTIVE);
 
         ArrayList<Estudiante> estudiantesJunioList = new ArrayList<>();
         ArrayList<Estudiante> estudiantesSeptiembreList = new ArrayList<>();
